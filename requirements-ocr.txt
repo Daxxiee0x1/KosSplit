@@ -1,0 +1,4 @@
+# Optional: receipt OCR when running on a computer instead of Android.
+# Also install the Tesseract OCR program for your operating system.
+pytesseract==0.3.13
+pillow==11.1.0

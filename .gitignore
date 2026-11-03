@@ -1,0 +1,8 @@
+.venv/
+.buildozer/
+bin/
+__pycache__/
+*.py[cod]
+*.db
+*.xlsx
+*.pdf
