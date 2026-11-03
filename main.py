@@ -1386,6 +1386,19 @@ class KosSplitApp(App):
     # Receipt scanning -------------------------------------------------------
 
     def open_scan(self):
+        try:
+            self._open_scan_modal()
+        except Exception as error:
+            from kivy.logger import Logger
+
+            Logger.exception("KosSplit: popup pindai struk gagal dibuat")
+            self.scan_modal = None
+            self.notice(
+                f"Menu pindai struk tidak dapat dibuka: {error}",
+                "Pemindai tidak tersedia",
+            )
+
+    def _open_scan_modal(self):
         modal = FormModal("Pindai struk")
         self.scan_modal = modal
         modal.add_field(
@@ -1416,7 +1429,18 @@ class KosSplitApp(App):
 
     def _start_scan(self, modal: FormModal, action):
         modal.message("Membuka pemindai...", error=False)
-        action()
+        try:
+            action()
+        except Exception as error:
+            # Last-resort guard: an exception escaping a Kivy button callback can
+            # terminate the Android process instead of showing an error.
+            from kivy.logger import Logger
+
+            Logger.exception("KosSplit: aksi pindai struk gagal")
+            modal.message(
+                f"Pemindai tidak dapat dibuka: {error}. "
+                "Pilih foto dari galeri atau tempel teks struk."
+            )
 
     def pick_image_file(self, parent: FormModal):
         chooser_modal = FormModal("Pilih gambar")
