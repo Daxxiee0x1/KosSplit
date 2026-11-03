@@ -14,6 +14,7 @@ import threading
 from typing import Callable
 
 from kivy.clock import mainthread
+from kivy.logger import Logger
 from kivy.utils import platform
 
 from .receipt_parser import rows_from_boxes
@@ -36,26 +37,47 @@ class ReceiptScanner:
 
     @mainthread
     def deliver(self, text: str) -> None:
-        if text.strip():
-            self._on_text(text)
-        else:
-            self._on_error("Teks struk tidak terbaca. Coba foto lebih terang dan lurus.")
+        try:
+            if text.strip():
+                self._on_text(text)
+            else:
+                self._on_error(
+                    "Teks struk tidak terbaca. Coba foto lebih terang dan lurus."
+                )
+        except Exception as error:
+            Logger.exception("KosSplit: hasil OCR gagal diproses")
+            self.fail(f"Hasil OCR gagal diproses: {error}")
 
     @mainthread
     def fail(self, message: str) -> None:
-        self._on_error(message)
+        try:
+            self._on_error(message)
+        except Exception:
+            # Never let error-reporting itself terminate the Kivy event loop.
+            Logger.exception("KosSplit: pesan kesalahan pemindai gagal ditampilkan")
 
     def scan_camera(self) -> None:
         if not self.is_android:
             self.fail("Kamera hanya tersedia pada APK Android. Pilih file gambar.")
             return
-        _AndroidBridge.get(self).scan_camera()
+        try:
+            _AndroidBridge.get(self).scan_camera()
+        except Exception as error:
+            Logger.exception("KosSplit: gagal membuka bridge pemindai kamera")
+            self.fail(
+                f"Pemindai kamera tidak dapat dibuka: {error}. "
+                "Pastikan Google Play services aktif, atau pilih foto dari galeri."
+            )
 
     def pick_gallery(self) -> None:
         if not self.is_android:
             self.fail("Galeri Android hanya tersedia pada APK.")
             return
-        _AndroidBridge.get(self).pick_gallery()
+        try:
+            _AndroidBridge.get(self).pick_gallery()
+        except Exception as error:
+            Logger.exception("KosSplit: gagal membuka bridge galeri")
+            self.fail(f"Galeri tidak dapat dibuka: {error}")
 
     def read_file(self, path: str) -> None:
         """Desktop OCR in a worker thread so the UI does not freeze."""
@@ -137,11 +159,22 @@ class _AndroidBridge:
         self.FailureListener = FailureListener
 
     def _listen(self, task, on_success, failure_message: str) -> None:
+        def guarded_success(result):
+            try:
+                on_success(result)
+            except Exception as error:
+                Logger.exception(f"KosSplit: {failure_message}")
+                self.scanner.fail(f"{failure_message}: {error}")
+
         def on_failure(error):
-            detail = error.getMessage() if error is not None else ""
+            try:
+                detail = error.getMessage() if error is not None else ""
+            except Exception:
+                detail = str(error or "")
+            Logger.error(f"KosSplit: {failure_message}: {detail}")
             self.scanner.fail(f"{failure_message}. {detail or ''}".strip())
 
-        success = self.SuccessListener(on_success)
+        success = self.SuccessListener(guarded_success)
         failure = self.FailureListener(on_failure)
         self._keep = [success, failure]
         task.addOnSuccessListener(success)
@@ -177,18 +210,30 @@ class _AndroidBridge:
             self.scanner.fail(f"Pemindai kamera tidak tersedia: {error}. Pilih dari galeri.")
 
     def _launch_scanner(self, sender) -> None:
-        self._bind()
-        intent_sender = self.cast("android.content.IntentSender", sender)
-        self.PythonActivity.mActivity.startIntentSenderForResult(
-            intent_sender, REQUEST_SCAN, None, 0, 0, 0
-        )
+        try:
+            self._bind()
+            intent_sender = self.cast("android.content.IntentSender", sender)
+            self.PythonActivity.mActivity.startIntentSenderForResult(
+                intent_sender, REQUEST_SCAN, None, 0, 0, 0
+            )
+        except Exception as error:
+            self._unbind()
+            Logger.exception("KosSplit: intent kamera pemindai gagal dibuka")
+            self.scanner.fail(
+                f"Kamera pemindai gagal dibuka: {error}. Pilih foto dari galeri."
+            )
 
     def pick_gallery(self) -> None:
-        intent = self.Intent(self.Intent.ACTION_GET_CONTENT)
-        intent.setType("image/*")
-        intent.addCategory(self.Intent.CATEGORY_OPENABLE)
-        self._bind()
-        self.PythonActivity.mActivity.startActivityForResult(intent, REQUEST_PICK)
+        try:
+            intent = self.Intent(self.Intent.ACTION_GET_CONTENT)
+            intent.setType("image/*")
+            intent.addCategory(self.Intent.CATEGORY_OPENABLE)
+            self._bind()
+            self.PythonActivity.mActivity.startActivityForResult(intent, REQUEST_PICK)
+        except Exception as error:
+            self._unbind()
+            Logger.exception("KosSplit: intent galeri gagal dibuka")
+            self.scanner.fail(f"Galeri gagal dibuka: {error}")
 
     def _on_activity_result(self, request_code, result_code, data):
         if request_code not in (REQUEST_SCAN, REQUEST_PICK):
