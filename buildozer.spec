@@ -5,7 +5,7 @@ package.domain = id.kossplit
 source.dir = .
 source.include_exts = py,png,jpg,kv,ttf
 source.exclude_dirs = tests,bin,.buildozer,.venv
-version = 0.2.0
+version = 0.2.1
 requirements = python3,kivy==2.3.1,pyjnius,android,openpyxl,et_xmlfile,fpdf2==2.8.2,pillow,fonttools,defusedxml,plyer
 orientation = portrait
 fullscreen = 0
