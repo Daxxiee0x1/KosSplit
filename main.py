@@ -223,6 +223,51 @@ class Chevron(Widget):
             )
 
 
+class Arrow(Widget):
+    """A stroked right arrow. Drawn, because Kivy's bundled Roboto has no '→' glyph."""
+
+    def __init__(self, color=MUTED, **kwargs):
+        super().__init__(**kwargs)
+        self.tint = color
+        self.bind(pos=self.draw, size=self.draw)
+
+    def draw(self, *_):
+        self.canvas.clear()
+        left, right, cy = self.x + dp(2), self.right - dp(2), self.center_y
+        with self.canvas:
+            Color(*self.tint)
+            Line(points=[left, cy, right, cy], width=dp(1.4), cap="round")
+            Line(
+                points=[right - dp(5), cy + dp(5), right, cy, right - dp(5), cy - dp(5)],
+                width=dp(1.4),
+                cap="round",
+                joint="round",
+            )
+
+
+def transfer_row(debtor: str, creditor: str, size: int = 14) -> BoxLayout:
+    """'Debtor → Creditor' with a drawn arrow; names keep their width and shorten only when needed."""
+    row = BoxLayout(spacing=dp(8))
+    arrow = Arrow(size_hint_x=None, width=dp(20))
+    labels = [text_label(name, size, bold=True, height=52) for name in (debtor, creditor)]
+    probe = CoreLabel(font_size=sp(size), bold=True)
+    natural = [probe.get_extents(name)[0] + dp(2) for name in (debtor, creditor)]
+    for label in labels:
+        label.size_hint_x = None
+
+    def fit(*_):
+        available = max(0, row.width - arrow.width - 3 * row.spacing)
+        short, long_ = sorted(range(2), key=lambda i: natural[i])
+        labels[short].width = min(natural[short], available / 2)
+        labels[long_].width = min(natural[long_], available - labels[short].width)
+
+    row.bind(width=fit)
+    for widget in (labels[0], arrow, labels[1]):
+        row.add_widget(widget)
+    row.add_widget(Widget())
+    return row
+
+
 class NeuDropDown(Neu, DropDown):
     """Raised night-blue panel that floats below a spinner."""
 
@@ -795,7 +840,7 @@ class DashboardScreen(AppScreen):
             slip.bind(
                 on_release=lambda _, d=debtor, c=creditor, v=value: app.open_payment(d, c, v)
             )
-            slip.add_widget(text_label(f"{names[debtor]}  →  {names[creditor]}", 14, bold=True, height=52))
+            slip.add_widget(transfer_row(names[debtor], names[creditor]))
             slip.add_widget(text_label(rupiah(value), 14, EMBER, True, 52, halign="right"))
             debt_sheet.add_widget(slip)
         self.content.add_widget(debt_sheet)
