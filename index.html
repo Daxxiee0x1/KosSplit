@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KosSplit · Unduh APK Android</title>
+  <meta name="description" content="KosSplit: aplikasi Android untuk membagi tagihan, mencatat pengeluaran, memantau arus kas, dan menyederhanakan utang penghuni kos. Data tersimpan di HP, tanpa server dan tanpa akun." />
+  <meta name="theme-color" content="#1B2638" />
+  <meta property="og:title" content="KosSplit · Uang kos, tanpa tebak-tebakan" />
+  <meta property="og:description" content="Bagi tagihan, catat pengeluaran, dan sederhanakan utang penghuni kos. Unduh APK untuk Android." />
+  <meta property="og:image" content="https://daxxiee0x1.github.io/KosSplit/screens/dashboard.webp" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Palette and depth follow the app itself (README, "Keputusan visual"): one night-blue surface,
+       depth from a dim blue light top-left and a dense shadow bottom-right, azure as the only action colour. */
+    :root {
+      --night: #1b2638;
+      --azure: #2f7cf6;
+      --sky: #7cb8ff;
+      --ember: #ff8a7a;
+      --mint: #5fd3a4;
+      --text: #e8eef7;
+      --muted: #93a3bd;
+      --lift: -8px -8px 18px rgba(70, 102, 150, 0.22), 10px 10px 22px rgba(6, 10, 18, 0.6);
+      --lift-sm: -4px -4px 10px rgba(70, 102, 150, 0.2), 6px 6px 12px rgba(6, 10, 18, 0.55);
+      --sink: inset 4px 4px 10px rgba(6, 10, 18, 0.6), inset -4px -4px 10px rgba(70, 102, 150, 0.18);
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--night);
+      color: var(--text);
+      font: 400 16px/1.6 Roboto, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; height: auto; }
+    :focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; border-radius: 6px; }
+    .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+    .eyebrow { margin: 0; color: var(--sky); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .num { font-variant-numeric: tabular-nums; }
+
+    header { padding: 20px 0; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; text-decoration: none; letter-spacing: -0.01em; }
+    .brand img { width: 32px; height: 32px; }
+    .gh { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 14px; box-shadow: var(--lift-sm); color: var(--muted); font-weight: 500; font-size: 15px; text-decoration: none; transition: color 0.15s ease, box-shadow 0.15s ease; }
+    .gh:hover { color: var(--text); }
+    .gh:active { box-shadow: var(--sink); }
+
+    .hero { display: grid; gap: 48px; align-items: center; padding: 32px 0 72px; }
+    .hero h1 { margin: 12px 0 16px; font-size: clamp(40px, 6.4vw, 68px); line-height: 1.02; font-weight: 900; letter-spacing: -0.03em; }
+    .hero .lede { margin: 0; max-width: 34rem; color: var(--muted); font-size: 18px; }
+    .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 32px; }
+    .download { display: inline-flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 28px; border-radius: 18px; background: var(--azure); color: #fff; font-weight: 700; font-size: 18px; text-decoration: none; box-shadow: var(--lift); transition: transform 0.15s ease, box-shadow 0.15s ease; }
+    .download:hover { background: #3b86fa; }
+    .download:active { transform: translateY(1px); box-shadow: var(--lift-sm); }
+    .download svg { width: 22px; height: 22px; }
+    .meta { margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+    .meta strong { color: var(--text); font-weight: 500; }
+    .phone { justify-self: center; width: min(320px, 78vw); padding: 12px; border-radius: 40px; box-shadow: var(--lift); }
+    .phone img { border-radius: 30px; }
+
+    section { padding: 72px 0; }
+    h2 { margin: 10px 0 0; font-size: clamp(30px, 4vw, 42px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; }
+    .intro { margin: 14px 0 0; max-width: 40rem; color: var(--muted); }
+
+    .screens { display: grid; grid-auto-flow: column; grid-auto-columns: min(250px, 72vw); gap: 28px; margin-top: 40px; padding: 8px 4px 28px; overflow-x: auto; scroll-snap-type: x mandatory; }
+    .screens figure { margin: 0; scroll-snap-align: start; }
+    .screens .frame { padding: 8px; border-radius: 30px; box-shadow: var(--lift-sm); }
+    .screens img { border-radius: 23px; }
+    .screens figcaption { margin-top: 18px; }
+    .screens .tab { color: var(--sky); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .screens .say { display: block; margin-top: 4px; font-weight: 700; font-size: 17px; }
+    .screens .what { display: block; margin-top: 4px; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+
+    .features { display: grid; gap: 24px; margin-top: 40px; }
+    .card { padding: 28px; border-radius: 24px; box-shadow: var(--lift-sm); }
+    .card h3 { margin: 0; font-size: 20px; font-weight: 700; }
+    .card p { margin: 10px 0 0; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .chips li { padding: 8px 14px; border-radius: 12px; box-shadow: var(--sink); font-size: 14px; }
+    .slip { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding: 14px 18px; border-radius: 14px; box-shadow: var(--sink); font-weight: 700; }
+    .slip .debt { color: var(--ember); }
+    .slip svg { width: 20px; height: 12px; margin: 0 8px; vertical-align: middle; color: var(--muted); }
+    .money-in { color: var(--mint); }
+
+    .steps { display: grid; gap: 20px; margin: 40px 0 0; padding: 0; list-style: none; counter-reset: step; }
+    .steps li { display: grid; grid-template-columns: 48px 1fr; gap: 18px; align-items: start; padding: 24px; border-radius: 22px; box-shadow: var(--lift-sm); counter-increment: step; }
+    .steps li::before { content: counter(step); display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; box-shadow: var(--sink); color: var(--sky); font-weight: 900; font-size: 20px; }
+    .steps h3 { margin: 2px 0 0; font-size: 18px; }
+    .steps p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+    .note { margin-top: 24px; padding: 20px 24px; border-radius: 18px; box-shadow: var(--sink); color: var(--muted); font-size: 15px; }
+    .note strong { color: var(--text); }
+
+    .split { display: grid; gap: 24px; margin-top: 40px; }
+    .split ul { margin: 14px 0 0; padding-left: 20px; color: var(--muted); }
+    .split li + li { margin-top: 8px; }
+
+    footer { padding: 48px 0 64px; color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(147, 163, 189, 0.18); padding-top: 28px; }
+    footer a { text-underline-offset: 3px; }
+
+    @media (min-width: 860px) {
+      .hero { grid-template-columns: 1.15fr 0.85fr; padding-top: 56px; }
+      .phone { justify-self: end; }
+      .screens { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); grid-auto-columns: auto; overflow: visible; }
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(3, 1fr); }
+      .steps li { grid-template-columns: 1fr; }
+      .split { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="./"><img src="favicon.svg" alt="" width="32" height="32" />KosSplit</a>
+      <a class="gh" href="https://github.com/Daxxiee0x1/KosSplit">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        Kode sumber
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap hero">
+      <div>
+        <p class="eyebrow">Aplikasi Android · <span data-version>v0.2.2</span></p>
+        <h1>Uang kos, tanpa tebak-tebakan</h1>
+        <p class="lede">Bagi tagihan, catat pengeluaran, pantau arus kas, dan sederhanakan utang penghuni kos. Semua data tersimpan di HP, tanpa server dan tanpa akun.</p>
+        <div class="cta">
+          <a class="download" data-download href="KosSplit-0.2.2-arm64-v8a.apk" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" /></svg>
+            Unduh APK
+          </a>
+        </div>
+        <p class="meta"><strong data-size>47 MB</strong> · Android 7.0 atau lebih baru · HP 64-bit (ARM64) · <a href="https://github.com/Daxxiee0x1/KosSplit/releases">Semua versi</a></p>
+      </div>
+      <div class="phone">
+        <img src="screens/dashboard.webp" width="780" height="1688" alt="Layar Ringkas KosSplit: sisa arus kas Rp930.000, pemasukan dan pengeluaran bulan ini, dan tiga slip aliran utang antaranggota." />
+      </div>
+    </div>
+
+    <section aria-labelledby="layar">
+      <div class="wrap">
+        <p class="eyebrow">Empat tab</p>
+        <h2 id="layar">Seisi kos dalam satu HP</h2>
+        <div class="screens">
+          <figure>
+            <div class="frame"><img src="screens/dashboard.webp" width="780" height="1688" loading="lazy" alt="Tab Ringkas" /></div>
+            <figcaption><span class="tab">Ringkas</span><span class="say">Uang kos, tanpa tebak-tebakan</span><span class="what">Sisa arus kas bulan ini, siapa berutang ke siapa, dan pola pengeluaran per kategori.</span></figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="screens/bills.webp" width="780" height="1688" loading="lazy" alt="Tab Tagihan" /></div>
+            <figcaption><span class="tab">Tagihan</span><span class="say">Siapa pesan apa</span><span class="what">Tagihan patungan dari struk yang dipindai atau diisi manual, lengkap dengan siapa yang membayar.</span></figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="screens/expenses.webp" width="780" height="1688" loading="lazy" alt="Tab Catatan" /></div>
+            <figcaption><span class="tab">Catatan</span><span class="say">Jejak setiap rupiah</span><span class="what">Pemasukan dan pengeluaran dikelompokkan per bulan. Bulan baru muncul sendiri tanpa menghapus data lama.</span></figcaption>
+          </figure>
+          <figure>
+            <div class="frame"><img src="screens/members.webp" width="780" height="1688" loading="lazy" alt="Tab Anggota" /></div>
+            <figcaption><span class="tab">Anggota</span><span class="say">Orang di balik patungan</span><span class="what">Penghuni kos beserta rekening atau e-wallet dan budget bulanannya.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="fitur">
+      <div class="wrap">
+        <p class="eyebrow">Fitur</p>
+        <h2 id="fitur">Yang sudah bisa dipakai</h2>
+        <div class="features">
+          <article class="card">
+            <h3>Empat cara membagi tagihan</h3>
+            <p>Pajak, layanan, ongkir, dan diskon dibagi proporsional. Pembulatannya tetap, jadi tidak ada satu rupiah pun yang hilang.</p>
+            <ul class="chips"><li>Bagi rata</li><li>Nominal kustom</li><li>Persentase</li><li>Per item</li></ul>
+          </article>
+          <article class="card">
+            <h3>Pindai struk</h3>
+            <p>Lewat kamera, galeri, atau teks yang ditempel. Teks dibaca langsung di HP dengan Google ML Kit, lalu item, subtotal, pajak, layanan, diskon, dan total terisi otomatis ke tagihan per item.</p>
+          </article>
+          <article class="card">
+            <h3>Utang dengan transfer paling sedikit</h3>
+            <p>Utang antaranggota disederhanakan dengan greedy matching. Ketuk slip untuk menyalin nomor rekening dan membuka aplikasi bank atau e-wallet penerima, atau ingatkan lewat WhatsApp.</p>
+            <div class="slip"><span>Sinta<svg viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="ke"><path d="M1 6h17M13 1l5 5-5 5" /></svg>Raka</span><span class="debt num">Rp103.000</span></div>
+            <ul class="chips"><li>BCA mobile</li><li>blu by BCA Digital</li><li>Livin' by Mandiri</li><li>BRImo</li><li>BNI Mobile</li><li>GoPay</li><li>OVO</li><li>DANA</li><li>ShopeePay</li></ul>
+          </article>
+          <article class="card">
+            <h3>Laporan Excel dan PDF</h3>
+            <p>Excel berisi ringkasan per bulan, transaksi, dan tagihan dengan format Rupiah. PDF merangkum bulan berjalan. Pilih sendiri folder dan nama filenya, lalu buka langsung di Google Sheets, Excel, atau pembaca PDF.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="pasang">
+      <div class="wrap">
+        <p class="eyebrow">Cara pasang</p>
+        <h2 id="pasang">Tiga langkah di HP Android</h2>
+        <ol class="steps">
+          <li><div><h3>Unduh APK</h3><p>Tekan <strong>Unduh APK</strong> di atas dari browser HP. Filenya tersimpan di folder Download.</p></div></li>
+          <li><div><h3>Izinkan pemasangan</h3><p>Buka file APK. Jika Android bertanya, izinkan browser atau aplikasi File untuk memasang aplikasi dari sumber ini.</p></div></li>
+          <li><div><h3>Buka KosSplit</h3><p>Tambahkan anggota kos di tab <strong>Anggota</strong>, lalu catat tagihan pertama di tab <strong>Tagihan</strong>.</p></div></li>
+        </ol>
+        <p class="note"><strong>Kenapa ada peringatan?</strong> KosSplit belum ada di Play Store dan APK ini adalah build debug, jadi Play Protect bisa menampilkan peringatan aplikasi tidak dikenal. Pilih <strong>Tetap instal</strong>. Kode sumber dan proses build-nya terbuka di GitHub.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="privasi">
+      <div class="wrap">
+        <h2 id="privasi">Privasi dan batasan</h2>
+        <div class="split">
+          <div class="card">
+            <h3>Data tetap di HP</h3>
+            <ul>
+              <li>Semua data disimpan di SQLite di dalam aplikasi, tidak dikirim ke server.</li>
+              <li>Transfer selalu dikonfirmasi sendiri di aplikasi resmi bank atau e-wallet.</li>
+              <li>Jangan menyimpan PIN, kata sandi, atau kode OTP di kolom info pembayaran.</li>
+              <li>Backup database perlu dilakukan manual sebelum aplikasi dihapus.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Batas versi 0.2</h3>
+            <ul>
+              <li>Tidak terhubung langsung ke akun bank: tidak membaca saldo, mutasi, atau transfer otomatis.</li>
+              <li>Pemindai kamera memerlukan Google Play services. Tanpa itu, pakai galeri atau tempel teks.</li>
+              <li>Hasil pindai struk selalu perlu diperiksa sebelum disimpan.</li>
+              <li>Belum ada sinkronisasi cloud, login, atau penggunaan bersama antarperangkat.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>KosSplit, dibuat oleh <a href="https://github.com/Daxxiee0x1">Haekal Syahputra</a> dengan Python dan Kivy.</span>
+      <span><a href="https://github.com/Daxxiee0x1/KosSplit/releases">Releases</a> · <a href="https://github.com/Daxxiee0x1/KosSplit">GitHub</a></span>
+    </div>
+  </footer>
+
+  <script>
+    // Prefer the newest APK in GitHub Releases, so a new release needs no page edit.
+    // Without a release asset (or without the API) the button keeps the APK hosted next to this page.
+    fetch('https://api.github.com/repos/Daxxiee0x1/KosSplit/releases/latest')
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((release) => {
+        const apk = (release.assets || []).find((a) => a.name.endsWith('.apk'))
+        if (!apk) return
+        document.querySelectorAll('[data-download]').forEach((a) => (a.href = apk.browser_download_url))
+        document.querySelectorAll('[data-size]').forEach((el) => (el.textContent = Math.round(apk.size / 1048576) + ' MB'))
+        document.querySelectorAll('[data-version]').forEach((el) => (el.textContent = release.tag_name))
+      })
+      .catch(() => {})
+  </script>
+</body>
+</html>
