@@ -2,6 +2,14 @@
 
 KosSplit adalah aplikasi Android lokal untuk membagi tagihan, mencatat pengeluaran, memantau arus kas, dan menyederhanakan utang penghuni kos. Aplikasi ditulis dengan Python dan Kivy. Data disimpan di SQLite pada perangkat, tanpa server dan tanpa akun.
 
+## Unduh
+
+- **APK Android:** [KosSplit-0.2.2-arm64-v8a.apk](https://daxxiee0x1.github.io/KosSplit/KosSplit-0.2.2-arm64-v8a.apk) untuk HP 64-bit (ARM64) dengan Android 7.0 atau lebih baru
+- **Halaman unduh dan cara pasang:** [daxxiee0x1.github.io/KosSplit](https://daxxiee0x1.github.io/KosSplit/)
+- **Catatan rilis:** [GitHub Releases](https://github.com/Daxxiee0x1/KosSplit/releases)
+
+APK ini adalah build debug dari workflow `Build APK`, jadi Play Protect bisa menampilkan peringatan aplikasi tidak dikenal. Pilih **Tetap instal**.
+
 ## Yang sudah tersedia
 
 - Manajemen anggota, info pembayaran, dan budget bulanan
